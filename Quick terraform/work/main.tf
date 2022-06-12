@@ -43,5 +43,8 @@ resource "aws_subnet" "subnet2" {
 resource "aws_instance" "myec2" {
   instance_type = var.instance_type
   ami = "ami-0e449176cecc3e577"
+  count = 2
+  associate_public_ip_address = true
+  disable_api_termination = true
 
 }
