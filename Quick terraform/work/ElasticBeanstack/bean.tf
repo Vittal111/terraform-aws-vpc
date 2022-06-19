@@ -9,10 +9,6 @@ variable "environment_name" {
   type = string
   description = "beanstack environment name"
 }
-variable "template_name" {
-  type = string
-  description = "beanstack environment template name"
-}
 
 variable "max_count" {
     type = number
@@ -23,13 +19,17 @@ variable "max_age_in_days" {
   type = number
   description = "number of days the application version to retain"
 }
+variable "aws_iam_role" {
+   type = string
+   description = "IAM Role for beanstalk environment"
+}
 
 resource "aws_elastic_beanstalk_application" "myapp" {
   name = var.name
   description = "my new node js application"
 
 appversion_lifecycle {
-  service_role          = aws_iam_role.beanstalk_service.arn
+  service_role        = var.aws_iam_role
     max_count             = var.max_count
     delete_source_from_s3 = true
     max_age_in_days = var.max_age_in_days
@@ -40,11 +40,11 @@ resource "aws_elastic_beanstalk_application_version" "nodeversion" {
   application = aws_elastic_beanstalk_application.myapp.name
   description = "Application version created by user"
   bucket = aws_s3_bucket.default.id
-  key = aws_s3_object.nodejz.jar.id
+  key = aws_s3_object.nodejzjar.id
 }
 
 resource "aws_s3_bucket" "default" {
-    bucket = aws_elastic_beanstalk_application.myapp.bucket
+    bucket = "aws_elastic_beanstalk_application_version.nodeversion.bucket"
 }
 resource "aws_s3_object" "nodejzjar" {
   bucket = aws_s3_bucket.default.id
@@ -55,6 +55,5 @@ resource "aws_elastic_beanstalk_environment" "myenvironment" {
   name = var.environment_name
   application = aws_elastic_beanstalk_application.myapp.name
   solution_stack_name = "my environment stack"
-  template_name = var.template_name
 }
 
