@@ -36,6 +36,14 @@ variable "db_name" {
     description = "enter the db Name :"
   
 }
+variable "db_subnet_group_name" {
+  type = string
+  description = "enter the VPC Subnet group name for DB : "
+}
+variable "option_group_name" {
+  type = string
+  description = "enter the name of option group"
+}
 
 resource "aws_db_instance" "mydb" {
   allocated_storage = 10
@@ -55,4 +63,10 @@ resource "aws_db_instance" "mydb" {
   backup_retention_period = var.backup_retention_period
   backup_window = var.backup_window
   db_name = var.db_name
+  db_subnet_group_name = var.db_subnet_group_name
+  delete_automated_backups = true
+  deletion_protection = false
+  enabled_cloudwatch_logs_exports = [ "audit","error","general","alert" ]
+  multi_az = false
+  option_group_name = var.option_group_name
 }
