@@ -69,4 +69,11 @@ resource "aws_db_instance" "mydb" {
   enabled_cloudwatch_logs_exports = [ "audit","error","general","alert" ]
   multi_az = false
   option_group_name = var.option_group_name
+  maintenance_window = "Fri:09:00-Fri:09:30"
 }
+
+resource "aws_db_snapshot" "snap1" {
+  db_instance_identifier = aws_db_instance.mydb.id
+  db_snapshot_identifier = "snap1mysql"
+}
+
