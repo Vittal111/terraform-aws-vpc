@@ -39,3 +39,4 @@ resource "aws_iam_user_group_membership" "membership1" {
       aws_iam_group.group2.name,
   ]
 }
+
